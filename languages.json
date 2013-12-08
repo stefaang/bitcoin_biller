@@ -1,0 +1,14 @@
+{
+    "NL" : {
+        "sum" : "Som (mBTC)",
+        "payTo": "Betaling naar",
+        "newAddr": "Nieuw Adres",
+        "reset": "Reset"
+    },
+    "EN" : {
+        "sum" : "Sum (mBTC)",
+        "payTo": "Payment to",
+        "newAddr": "Neww Address",
+        "reset": "Reset"
+    }
+}

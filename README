@@ -1,0 +1,12 @@
+Required packages:
+- python
+- qrcode4.0.4 from https://pypi.python.org/pypi/qrcode
+- PIL (python imaging library), preferably the pillow branch
+- PyQt4
+
+For the lazy:
+- Get the latest WinPython. It already has PyQt.
+- Download qrcode package. Install with "python setup.py install"
+
+To run the code do: "python main.py"
+Change the payout address at start of initUI in main.py first.

@@ -1,0 +1,51 @@
+MainWidget{
+    background-color: #422     ;
+}
+
+QLabel{
+    color: beige                ;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+    stop: 0 #b21, stop: 0.1 #710);
+    font-size: 14px             ;
+    font-weight: bold           ;
+}
+
+QLineEdit{
+    background-color: beige    ;
+    align: center
+}
+
+QTextEdit{
+    background-color: beige    
+}
+
+QPushButton{
+    color: beige                ;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+    stop: 0 #a41, stop: 0.1 #630);
+    font-size: 14px             ;
+    font-weight: bold           ;
+}
+
+
+CatButton{
+    color: beige                ;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+    stop: 0 #a41, stop: 0.1 #630);
+    font-size: 14px             ;
+    font-weight: bold           ;
+    min-width: 100px            ;              
+    min-height: 60px
+}
+
+ProductButton{
+    color: beige                ;
+    /*background-color: firebrick    ;*/
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+    stop: 0 firebrick, stop: 0.1 maroon);
+    font-size: 14px             ;
+    font-weight: bold           ;
+    min-width: 100px            ;      
+    min-height: 60px 
+}
+
