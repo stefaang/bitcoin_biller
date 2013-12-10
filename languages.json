@@ -3,12 +3,16 @@
         "sum" : "Som (mBTC)",
         "payTo": "Betaling naar",
         "newAddr": "Nieuw Adres",
-        "reset": "Reset"
+        "reset": "Reset",
+        "rate": "Wisselkoers",
+        "refresh": "Vernieuwen"
     },
     "EN" : {
         "sum" : "Sum (mBTC)",
         "payTo": "Payment to",
         "newAddr": "Neww Address",
-        "reset": "Reset"
+        "reset": "Reset",
+        "rate": "Rate",
+        "refresh": "Refresh"
     }
 }

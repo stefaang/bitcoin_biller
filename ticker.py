@@ -6,33 +6,28 @@ from PyQt4 import QtGui, QtCore
 from PyQt4 import QtNetwork
 #from PyQt4.QtNetwork import QNetworkAccessManager, QNetworkRequest, QUrl
 
-class TickerButton(QtGui.QPushButton):
-    
+
+class Ticker(QtCore.QObject):
+
+    changed = QtCore.pyqtSignal(object)
+
     def __init__(self):
-        super(TickerButton, self).__init__()        
+        super(Ticker, self).__init__()
+        self.manager = QtNetwork.QNetworkAccessManager(self)
+        self.manager.finished.connect(self.replyFinished)
 
-        manager = QtNetwork.QNetworkAccessManager(self)
-        manager.finished.connect(self.replyFinished)
-        self.clicked.connect(self.updateRate)
-        self.manager = manager
-        
-        # initialize the rate
-        self.rate = 0.77
-        self.setText("Wisselkoers: %.3f EUR/mBTC" % self.rate)        
-        #self.updateRate()
-
-    def updateRate(self):
+    def request(self):
+        print "Ticker request"
+        self.changed.emit('Updating...')
         self.manager.get(QtNetwork.QNetworkRequest(QtCore.QUrl("http://blockchain.info/ticker")))
-        self.setText("Updating...")
 
-    def replyFinished(self, reply="None"):        
+    def replyFinished(self, reply="None"):
         try:            
             answer = json.loads(unicode(QtCore.QString(reply.readAll())))['EUR']['15m']
         except:
-            print "error with reply"
-            answer = "xxx"
-        self.setText("Wisselkoers: %.3f EUR/mBTC" % (answer/1000))
-        self.rate = answer/1000
+            print "Ticker reply error"
+            answer = "error"
+        self.changed.emit(answer)
             
             
 class TestApp(QtGui.QWidget):   

@@ -97,13 +97,14 @@ class Browser(QtGui.QWidget):
             grid.addWidget(catbtn, (i+3)/4+j/4, j%4)
             j+=1
         
+        grid.setMargin(0)
         self.setLayout(grid)
 
     def changeCat(self):
-        cat = self.sender().name
+        catactive = self.sender().name
         
-        print cat
-        drinks = pricelist[cat]
+        print catactive
+        drinks = pricelist[catactive]
         print drinks.keys()
         
         grid = self.layout()
@@ -124,6 +125,10 @@ class Browser(QtGui.QWidget):
             if cat == "favorite":
                 continue
             catbtn = self.cats[cat]
+            if cat == catactive:
+                catbtn.setStyleSheet("background:#eee;")
+            else:
+                catbtn.setStyleSheet("background:#ccc;")
             grid.addWidget(catbtn, (i+3)/4+j/4, j%4)
             j+=1
         
