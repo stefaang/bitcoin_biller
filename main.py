@@ -8,7 +8,7 @@ from PyQt4 import QtGui, QtCore
 
 # local imports
 from browser import Browser
-from ticker import TickerButton
+from ticker import Ticker
 from qrlabel import QRLabel
 
 
@@ -79,9 +79,20 @@ class MainWidget(QtGui.QWidget):
         self.qrLabel = qrLabel  # keep reference for later updates       
         self.updateQR()
         
-        ticker = TickerButton() 
-        ticker.updateRate()
+        # Update ticker
+        ticker = Ticker()
+        ticker.changed.connect(self.showRate)
+        QtCore.QTimer.singleShot(100, ticker.request);
+
+        # Rate
+        rateLabel = QtGui.QLabel(cl["rate"])
+        rateText = QtGui.QLabel()
+        rateBtn = QtGui.QPushButton(cl["refresh"])
+        rateBtn.clicked.connect(ticker.request)
+
         self.ticker = ticker
+        self.rateText = rateText
+        self.showRate('Updating...')
 
         #######################
         # LAYOUT
@@ -90,14 +101,16 @@ class MainWidget(QtGui.QWidget):
         
         grid.addWidget(overviewEdit, 1, 0, 1, 3)
 
-        grid.addWidget(ticker,2,0, 1,3)
+        grid.addWidget(rateLabel, 2, 0)
+        grid.addWidget(rateText, 2, 1)
+        grid.addWidget(rateBtn, 2, 2)
         
         grid.addWidget(sumLabel, 3, 0)
         grid.addWidget(sumEdit, 3, 1)
         grid.addWidget(resetBtn, 3, 2)
 
         grid.addWidget(addressLabel, 4, 0)        
-        grid.addWidget(addressLine,4,1,1,2)
+        grid.addWidget(addressLine, 4, 1, 1, 2)
 
         grid.addWidget(qrLabel, 0, 3, 5, 1)
         
@@ -117,25 +130,24 @@ class MainWidget(QtGui.QWidget):
 
     def incrClick(self):
         # check if we are ready to process
-        if self.ticker.text().contains("..."):
+        if self.rateText.text().contains("..."):
             return
         # get productButton that is clicked
-        sender = self.sender() 
-        rate = self.ticker.rate
+        sender = self.sender()
         # update overview
         text = self.overview.toPlainText()
         price_EUR = sender.price
-        price_mBTC = price_EUR / rate
+        price_mBTC = price_EUR / self.rate * 1000
         text += "\n%s \t EUR %3.2f \t mBTC %3.2f" % (sender.text(), price_EUR, price_mBTC)
         self.overview.setText(text)
         # update sum --> TODO: move to custom widget
-        text = "%3.2f" % ( float(self.sumEdit.text()) + sender.price / rate)
+        text = "%3.2f" % ( float(self.sumEdit.text()) + price_mBTC)
         self.sumEdit.setText(text)
         # update QR code
         self.updateQR()
 
     def resetClick(self):
-        self.ticker.updateRate()
+        self.ticker.request()
         self.sumEdit.setText("0.00") 
         self.overview.setText(datetime.now().strftime("%Y/%m/%d %H:%M"))
         self.updateQR()        
@@ -147,6 +159,15 @@ class MainWidget(QtGui.QWidget):
         text = "bitcoin:"+address+"?amount="+str(amount)
         print text
         self.qrLabel.setCode(text)
+
+    def showRate(self, rate = "1"):
+        # print "Main showRate"
+        try:
+            self.rate = float(rate)
+            self.rateText.setText("%.3f EUR/mBTC" % (self.rate/1000))
+        except ValueError:
+            self.rateText.setText(rate)
+        
         
 def main():    
     app = QtGui.QApplication(sys.argv)

@@ -1,51 +1,48 @@
 MainWidget{
-    background-color: #422     ;
+    background-color: #fff     ;
 }
 
 QLabel{
-    color: beige                ;
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-    stop: 0 #b21, stop: 0.1 #710);
-    font-size: 14px             ;
-    font-weight: bold           ;
+    border:0 none;
 }
-
+QTextEdit{
+    font-family: "courier new";
+    border:1px solid #ccc;
+}
+/*
 QLineEdit{
-    background-color: beige    ;
+    background-color: red    ;
     align: center
 }
 
-QTextEdit{
-    background-color: beige    
-}
 
 QPushButton{
-    color: beige                ;
+    color: green                ;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
     stop: 0 #a41, stop: 0.1 #630);
     font-size: 14px             ;
     font-weight: bold           ;
 }
 
-
+*/
 CatButton{
-    color: beige                ;
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-    stop: 0 #a41, stop: 0.1 #630);
-    font-size: 14px             ;
-    font-weight: bold           ;
-    min-width: 100px            ;              
-    min-height: 60px
+    font-size: 18px;
+    height: 60px;
+    width:100px;
+    background: #ccc;
+    border:0px solid #ccc;
 }
 
 ProductButton{
-    color: beige                ;
-    /*background-color: firebrick    ;*/
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-    stop: 0 firebrick, stop: 0.1 maroon);
-    font-size: 14px             ;
-    font-weight: bold           ;
-    min-width: 100px            ;      
-    min-height: 60px 
+    font-size: 16px;
+    height: 60px;
+    width:100px;
+    background: #fff;
+    border:1px solid #ccc;
 }
-
+ProductButton:hover{
+    border-width: 5px;
+}
+ProductButton:focus{
+    border:5px solid #666;
+}
