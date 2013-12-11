@@ -138,10 +138,10 @@ class MainWidget(QtGui.QWidget):
         text = self.overview.toPlainText()
         price_EUR = sender.price
         price_mBTC = price_EUR / self.rate * 1000
-        text += "\n%s \t EUR %3.2f \t mBTC %3.2f" % (sender.text(), price_EUR, price_mBTC)
+        text += "\n%14s \t EUR %5.2f \t mBTC %5.2f" % (sender.text(), price_EUR, price_mBTC)
         self.overview.setText(text)
         # update sum --> TODO: move to custom widget
-        text = "%3.2f" % ( float(self.sumEdit.text()) + price_mBTC)
+        text = "%6.2f" % ( float(self.sumEdit.text()) + price_mBTC)
         self.sumEdit.setText(text)
         # update QR code
         self.updateQR()
@@ -157,7 +157,6 @@ class MainWidget(QtGui.QWidget):
         amount = 0.001 * float(self.sumEdit.text())
         address = self.addressLine.text()
         text = "bitcoin:"+address+"?amount="+str(amount)
-        print text
         self.qrLabel.setCode(text)
 
     def showRate(self, rate = "1"):

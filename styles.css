@@ -43,6 +43,6 @@ ProductButton{
 ProductButton:hover{
     border-width: 5px;
 }
-ProductButton:focus{
+ProductButton:presed{
     border:5px solid #666;
 }
