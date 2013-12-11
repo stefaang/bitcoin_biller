@@ -137,7 +137,7 @@ class MainWidget(QtGui.QWidget):
         text = self.overview.toPlainText()
         price_EUR = sender.price
         price_mBTC = price_EUR / self.rate * 1000
-        text += "\n{14s} \t EUR {5.2f} \t mBTC {5.2f}".format(
+        text += "\n{:14s} \t EUR {:5.2f} \t mBTC {:5.2f}".format(
             sender.text(), price_EUR, price_mBTC)
         self.overview.setText(text)
         # update sum --> TODO: move to custom widget
