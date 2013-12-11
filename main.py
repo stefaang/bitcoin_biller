@@ -27,16 +27,14 @@ class MainWidget(QtGui.QWidget):
 
         # init payment setup
         self.amount = "0.00"
+        self.txref = "BB100001"
         self.address = "13BjVxFnZrFCZAR3e1144cWMWwT3WJBJXw"
-        self.rate  = 0.56
+        self.rate  = 0.56        
         
         # set current language
         with open("languages.json") as f:
-            languages = json.loads(f.read())
-            print languages
-            
+            languages = json.loads(f.read())            
             cl = languages["NL"]
-
 
         # get products & prices
         browser = Browser()        
@@ -68,12 +66,14 @@ class MainWidget(QtGui.QWidget):
         addressLine.setReadOnly(1)
         addressLine.adjustSize()
         addressLine.setMinimumWidth(230)
+        addressLine.textChanged.connect(self.updateQR)
         self.addressLine = addressLine
         addressLabel = QtGui.QLabel(cl["payTo"])
         addressLabel.setBuddy(addressLine)
         addressLabel.setFrameStyle(0x0006)
         # TODO: get addresses from public address seed
         newAddrButton = QtGui.QPushButton(cl["newAddr"])
+        newAddrButton.clicked.connect(self.getNewAddress)
         
         qrLabel = QRLabel()                
         self.qrLabel = qrLabel  # keep reference for later updates       
@@ -110,11 +110,11 @@ class MainWidget(QtGui.QWidget):
         grid.addWidget(resetBtn, 3, 2)
 
         grid.addWidget(addressLabel, 4, 0)        
-        grid.addWidget(addressLine, 4, 1, 1, 2)
+        grid.addWidget(addressLine, 4, 1)
+        grid.addWidget(newAddrButton, 4, 2)
 
         grid.addWidget(qrLabel, 0, 3, 5, 1)
         
-
         self.setLayout(grid)       
         #self.setGeometry(300, 300, 250, 150)
         self.setWindowTitle('Bitcoin Biller')
@@ -125,7 +125,6 @@ class MainWidget(QtGui.QWidget):
             ss = f.read()
             self.setStyleSheet(ss)
             
-
         self.show()
 
     def incrClick(self):
@@ -138,7 +137,8 @@ class MainWidget(QtGui.QWidget):
         text = self.overview.toPlainText()
         price_EUR = sender.price
         price_mBTC = price_EUR / self.rate * 1000
-        text += "\n%14s \t EUR %5.2f \t mBTC %5.2f" % (sender.text(), price_EUR, price_mBTC)
+        text += "\n{14s} \t EUR {5.2f} \t mBTC {5.2f}".format(
+            sender.text(), price_EUR, price_mBTC)
         self.overview.setText(text)
         # update sum --> TODO: move to custom widget
         text = "%6.2f" % ( float(self.sumEdit.text()) + price_mBTC)
@@ -153,7 +153,7 @@ class MainWidget(QtGui.QWidget):
         self.updateQR()        
 
     def updateQR(self):
-        # bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>]        
+        # bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<mess>]        
         amount = 0.001 * float(self.sumEdit.text())
         address = self.addressLine.text()
         text = "bitcoin:"+address+"?amount="+str(amount)
@@ -167,6 +167,16 @@ class MainWidget(QtGui.QWidget):
         except ValueError:
             self.rateText.setText(rate)
         
+    def getNewAddress(self):
+        import address
+        # TODO: seed generation/import guide + backup guide  (electrum style)
+        #       maybe best to not use the current method at all. 
+        #       we could use rounds as a 4-6 digit PINcode.
+        # update the seed
+        self.txref = self.txref[:2] + str(int(self.txref[2:]) + 1)
+        print self.txref 
+        pub, priv = address.get_addr_from_seed(seed=self.txref,rounds=3000)
+        self.addressLine.setText(pub)
         
 def main():    
     app = QtGui.QApplication(sys.argv)

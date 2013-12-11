@@ -2,7 +2,7 @@
     "NL" : {
         "sum" : "Som (mBTC)",
         "payTo": "Betaling naar",
-        "newAddr": "Nieuw Adres",
+        "newAddr": "Nieuw",
         "reset": "Reset",
         "rate": "Wisselkoers",
         "refresh": "Vernieuwen"
@@ -10,7 +10,7 @@
     "EN" : {
         "sum" : "Sum (mBTC)",
         "payTo": "Payment to",
-        "newAddr": "Neww Address",
+        "newAddr": "New",
         "reset": "Reset",
         "rate": "Rate",
         "refresh": "Refresh"
