@@ -1,0 +1,43 @@
+{
+
+	"items": [
+	{
+		"name": "Favorites",
+		"items": {
+			"Cola": 2.1,
+			"Pint": 2.1
+		}
+	}
+	,
+	{
+		"name": "Frisdrank",
+		"items": {
+			"Cola": 2.1,
+			"Fruitsap": 2
+		}
+	}
+	,
+	{
+		"name": "Bieren",
+		"items": {
+			"Jupiler":2.1,
+			"Maes":2.1,
+			"Kriek":2.6,
+			"Brugse zot":3,
+			"Achel":3,
+			"Duvel":3.2,
+			"Leffe":2.5,
+			"Augustijn":2.1,
+			"Barbaar":2.1,
+			"Piraat":3.4,
+			"Stille Nacht":2.8,
+			"West-Malle tripel":3.2,
+			"West-Malle dubbel":4,
+			"Kasteelbier":2.7,
+			"Stella Artois":2.3,
+			"Hoegaarden":2.1,
+			"Tongerloo":3.1
+		}
+	}
+	]
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="Biller">
+<head>
+	<meta charset="utf-8">
+	<title>Bitcoin Biller</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" type="image/png" href="img/favicon.png" />
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/biller.css" rel="stylesheet">
+</head>
+<body ng-controller="CtrlMain">
+	<div class="mf-bill">
+		<p>
+			<button ng-click="table()" class="btn btn-success btn-block">Add table</button>
+		</p>
+		<div ng-repeat="table in tables" class="panel panel-{{$index==focus?'primary':'success'}}">
+			<div class="panel-heading" ng-click="toggle($index)">
+				<span class="pull-right" ng-show="table.sum">€ {{table.sum}}</span>
+				{{table.name}}
+			</div>
+		</div>
+	</div>
+	<div class="mf-view">
+		<div class="mf-items">
+			<div ng-repeat="cat in items">
+				<h2>{{cat.name}}</h2>
+				<div ng-repeat="(item,price) in cat.items" ng-click="add(item,price)" class="btn btn-default">
+					<b>{{item}}</b><br />{{price}}
+				</div>
+			</div>
+		</div>
+
+		<hr />
+
+		<div ng-show="tables[focus].sum">
+			<p>
+				<a ng-href="#" ng-click="nofocus()" class="btn btn-warning">Andere tafel</a>
+			</p>
+			<h1><span class="text-muted">{{tables[focus].name}}:</span> € {{sum||'--'}}</h1>
+			<p ng-repeat="(key,item) in tables[focus].items" class="nav">
+				<tt class="pull-left clearfix" style="width:100px">{{item.count}} &times; &euro; {{item.price}}</tt>
+				{{key}}
+			</p>
+			<h2>Nu afrekenen</h2>
+			<p>
+				<button ng-click="pay(i.id)" class="btn btn-default btn-lg">Cash</button>
+				<button ng-click="pay(i.id)" class="btn btn-default btn-lg">Bancontact</button>
+				<button ng-click="pay(i.id)" class="btn btn-default btn-lg">Bitcoin</button>
+			</p>
+			<h3>Afgerekend</h3>
+			<p>
+				<button ng-click="done(focus)" class="btn btn-success btn-block btn-lg">Tafel opruimen</button>
+			</p>
+		</div>
+	</div>
+	<script src="js/angular.min.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>
