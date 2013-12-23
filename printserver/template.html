@@ -1,0 +1,25 @@
+<html>
+<head>
+  <style>
+    @page {
+      size: a6 portrait;
+    }
+    body{
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <img src="{{ qr }}" />
+  <br>
+  {{ address }}
+  <br>
+  Amount: {{ amount }} BTC
+  <br>
+  <br>
+  <br>
+  This is a bitcoin payment request.
+  <br>
+  This QR code should contain the payment address and the amount.
+</body>
+</html>
