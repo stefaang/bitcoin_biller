@@ -1,53 +1,79 @@
 
 /* Structure */
+body{background: #eee;}
 
-/* List */
-.mf-bill{
-	padding:10px;
+/* Aside - Focus on top */
+#focus{
+	line-height: 60px;
+	font-size: 30px;
+	text-align: center;
+	border-bottom: 1px solid #ccc;
 }
-.mf-bill .panel{
-	margin-bottom: 5px
+#focus a{color: #000;}
+
+/* Aside - Tabs */
+#tabs div{
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
 }
-.mf-bill .panel-body{
-	padding: 5px 15px;
+#tabs span{float: right;}
+#tabs .active{font-weight: bold;}
+#tabs .focus{background: #fff;}
+
+/* Main - Categories TODO */
+#main{padding: 0 1% 200px;}
+
+/* Main - Items */
+#items h2{
+	margin: 0;
+	padding: 1% 1% 0;
 }
-.mf-bill .panel-body p{
-	margin-bottom: 0px
+#items .btn{
+	width: 31.3%;
+	margin: 1% 1%;
 }
-.mf-view{
-	padding:10px 10px 0;
-}
-.mf-items .btn{
-	width: 33.3%;
-	border-radius: 0;
-}
+
+/* Main - Settle */
+#settle{padding: 0 1%;}
 
 
 /* Responsive */
 @media (min-width: 500px) {
-	.mf-bill{
+	aside{
 		position: fixed;
 		top:0;left:0;right:60%;bottom: 0;
 		overflow-y: scroll;
 	}
-	.mf-view{
+	#main{
 		width:60%;
 		float: right;
 	}
 }
 
 @media (min-width: 700px) {
-	.mf-bill{right:70%;}
-	.mf-view{width:70%;}
-	.mf-items .btn {width: 25%;}
+	
+aside {right:70%;}
+	#main{width:70%;}
+	#items .btn {width: 23%;}
 }
 
 @media (min-width: 900px) {
-	.mf-bill{right:80%;}
-	.mf-view{width:80%;}
-	.mf-items .btn {width: 20%;}
+	aside{right:80%;}
+	#main{width:80%;}
+	#items .btn {width: 18%;}
 }
 
 @media (min-width: 1200px) {
-	.mf-items .btn {width: 16.666%;}
+	#items .btn {width: 14.666%;}
+}
+
+
+/* Phonegap */
+* {
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+body {
+	-webkit-touch-callout: none;
+	-webkit-text-size-adjust: none;
+	-webkit-user-select: none;
 }
