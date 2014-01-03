@@ -3,35 +3,134 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('Biller', [])
+.config(['$httpProvider', function($httpProvider) {
+	$httpProvider.defaults.useXDomain = true;
+	delete $httpProvider.defaults.headers.common['X-Requested-With'];
+}
+])
 
 /* Controllers */
 
 // Main
-.controller('CtrlMain', function($scope, $http) {
+.controller('CtrlMain', function($scope, $http, $timeout) {
 	// Settings
 	$scope.items = {};
 	$scope.focus = 0;
-	$scope.tabs = [{name:'Vooraan'},{name:'Links'},{name:'Rechts'},{name:'Achteraan'},{name:'Extra'}];
+	$scope.tabs = [{name:'Tab One'},{name:'Tab Two'},{name:'Tab Three'}];
 	$scope.count = 1;
+
+	$scope.print = true;
 	$scope.printer = 'http://192.168.0.227';
+	$scope.server = {ip:'192.168.0.227'};
+	$scope.inet = {ticking:2, slowperiod:15*60*1000};
+
+	$scope.rate = 500;
+	$scope.rateMethod = 'bitpay';
+	$scope.pct = 3;
+
+	$scope.addr = '12LN7XiuegAgj9SJAxLQQwJBmiwYGTpSs9';
+	$scope.txs = [];
+	$scope.oldTxs = [];
+
+	// TODO: Auth
+	$scope.user = {name:'Waiter', key:'waiter'};
+	$scope.copy = {};
+	angular.copy($scope.user, $scope.copy);
 
 	// Fetch items
-	$http.get('cache/items.json').success(function(d){
+	$http.get('cache/items.json', {timeout:5000}).success(function(d){
 		var o = angular.fromJson(d);
 		if(o.items){
 			$scope.items = angular.copy(o.items);
 		}
 	});
 
+	$scope.getRate = function(index){
+		$scope.inet.update('Refreshing rate');
+		$http.get('https://bitpay.com/api/rates', {timeout:5000}).success(function(d){
+			var o = angular.fromJson(d);
+			if(o[1].code == 'EUR'){
+				$scope.rate = o[1].rate;
+			}
+			$scope.inet.update('Rate refreshed');
+		})
+		.error(function(){
+			$scope.inet.update('Cannot get rate',true);
+		})
+	};
+
+	$scope.mbtc = function(){
+		return ($scope.tabs[$scope.focus].sum||0) * 1000 / $scope.rate * (1 - $scope.pct / 100);
+	};
+
+	$scope.archive = function(){
+		$scope.oldTxs = angular.copy($scope.txs);
+		$scope.updateTxs();
+	};
+
+	$scope.showall = function(){
+		$scope.oldTxs = [];
+		$scope.getLatest();
+	};
+
+	$scope.getLatest = function(){
+		console.log('latest')
+		$timeout.cancel($scope.inet.ticker);
+		$scope.inet.update('Refreshing payments');
+		$http.get('http://thomasg.be/biller/txs.php?a=' + $scope.addr).success(function(d){
+			$scope.updateTxs(angular.fromJson(d.txs));
+			$scope.inet.update('Payments refreshed');
+			$scope.inet.ticker = $timeout($scope.inet.tick, 10000);
+		})
+		.error(function(a,b,c,d){
+			console.log(a)
+			console.log(b)
+			console.log(c)
+			$scope.inet.update('Cannot get payments',1);
+			$scope.inet.ticker = $timeout($scope.inet.tick, 10000);
+		})
+	};
+
+	$scope.updateTxs = function(txs){
+		if(txs){
+			console.log(txs)
+			$scope.txs = angular.copy(txs).filter(function(tx) {
+				for (var i = $scope.oldTxs.length - 1; i >= 0; i--) {
+					if($scope.oldTxs[i].hash == tx.hash)
+						return false;
+				}
+				return true;
+			});
+		}
+		else{
+			$scope.txs = [];
+		}
+	};
+
+	$scope.getQr = function(amount){
+		amount = amount || ($scope.mbtc()/1000).toFixed(6);
+		qr.canvas({
+			canvas: document.getElementById('qrcode'),
+			value: 'bitcoin:' + $scope.addr + '?amount=' + amount,
+			size: 10,
+			background: '#eee',
+		});
+		console.log('bitcoin:' + $scope.addr + '?amount=' + amount)
+	};
+	$scope.getQr();
+
 	$scope.toggle = function(index){
 		$scope.focus = index;
+		$scope.getQr();
 	};
 
 	$scope.add = function(item,price){
 		var t = $scope.tabs[$scope.focus];
 		if(!t.items){
 			t.items = {};
+			t.count = 0;
 		}
+		t.count++;
 		if(!t.items[item]){
 			t.items[item] = {count:1,price:price};
 		}
@@ -41,6 +140,8 @@ angular.module('Biller', [])
 		if(!t.sum) t.sum = 0;
 		t.sum	+= parseFloat(price);
 		t.sum = parseFloat(t.sum.toFixed(2));
+
+		$scope.getQr();
 	};
 
 	$scope.tab = function(){
@@ -50,12 +151,23 @@ angular.module('Biller', [])
 
 	$scope.settle = function(index, method){
 		$scope.tabs[index].method = method;
-		if(method == 'BTC')
-			$scope.bitcoin(index);
-	};
+		if(!$scope.print) return;
 
-	$scope.checkout = function(){
-		console.log($scope.tabs[$scope.focus])
+		/* Print request */
+		switch(method){
+			case 'BTC':
+			$scope.bitcoin(index);
+			break;
+			case 'Cash':
+			$scope.cash(index);
+			break;
+			case 'Bancontact':
+			$scope.bancontact(index);
+			break;
+			default:
+			$scope.tabs[index].method = 'Payment method error';
+		}
+		$scope.getQr();
 	};
 
 	$scope.bitcoin = function(index){
@@ -72,9 +184,48 @@ angular.module('Biller', [])
 		});
 	};
 
+	$scope.cash = function(index){
+		var t = $scope.tabs[index];
+		t.class = 'alert alert-danger';
+		t.status = 'Cash not implemented';
+	};
+
+	$scope.bancontact = function(index){
+		var t = $scope.tabs[index];
+		t.class = 'alert alert-danger';
+		t.status = 'Bancontact not implemented';
+	};
+
 	$scope.settled = function(index){
 		$scope.tabs[index] = {name:$scope.tabs[index].name};
+		$scope.getQr();
 	};
+
+	$scope.inet.update = function(msg, error){
+		$scope.inet.time = Date.now();
+		$scope.inet.msg = msg;
+		$scope.inet.error = error?true:false;
+	};
+
+	$scope.inet.tick = function(times){
+		if(times) $scope.inet.ticking = times;
+		if(!$scope.inet.ticking) return;
+		$scope.inet.ticking--;
+	};
+
+	$scope.inet.check = function(){
+		console.log('check')
+		$scope.inet.ticking = $scope.inet.ticking?0:30;
+		$scope.getLatest();
+	};
+
+	$scope.inet.slowtick = function(period){
+		$scope.inet.slowperiod = period || $scope.inet.slowperiod;
+		$scope.getLatest();
+		$scope.getRate();
+		$timeout($scope.inet.tick, $scope.inet.slowperiod);
+	};
+	$scope.inet.slowtick();
 })
 
 

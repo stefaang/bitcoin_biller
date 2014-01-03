@@ -3,13 +3,29 @@
 body{background: #eee;}
 
 /* Aside - Focus on top */
+#qr{text-align: center;margin-top: 20px}
+#qrcode{padding: 0 0 0 15px;width: 80%}
+.qron{
+
+	width: 100%!important;
+	background: #eee;
+	z-index: 21;
+}
+.qron #qrcode{
+	width: 90%;
+	max-width: 600px;
+	max-height: 90%
+}
+
 #focus{
-	line-height: 60px;
+	line-height: 40px;
 	font-size: 30px;
+	padding-bottom: 10px;
 	text-align: center;
 	border-bottom: 1px solid #ccc;
 }
 #focus a{color: #000;}
+#focus small{font-size: 60%;}
 
 /* Aside - Tabs */
 #tabs div{
@@ -21,52 +37,72 @@ body{background: #eee;}
 #tabs .focus{background: #fff;}
 
 /* Main - Categories TODO */
-#main{padding: 0 1% 200px;}
+#main{padding: 0 1% 40px;}
 
 /* Main - Items */
 #items h2{
 	margin: 0;
-	padding: 1% 1% 0;
+	padding: 1em 1% .2em;
+	font-size: 1.7em
 }
 #items .btn{
-	width: 31.3%;
-	margin: 1% 1%;
+	width: 48%;
+	margin: 1%;
+	font-size: 1.3em;
+	overflow: hidden;
 }
 
 /* Main - Settle */
 #settle{padding: 0 1%;}
+.settings{margin-top: 20px;padding: 0 10px}
+#txs{margin-top: 20px;padding: 0 10px}
 
 
 /* Responsive */
-@media (min-width: 500px) {
+@media (min-width: 550px) {
 	aside{
-		position: fixed;
-		top:0;left:0;right:60%;bottom: 0;
+		overflow-x: hidden;
 		overflow-y: scroll;
+		width:250px;
+		float: left;
+		position: absolute;
+		top:0;
+		bottom:0;
+		left:0;
 	}
 	#main{
-		width:60%;
+		overflow-x: hidden;
+		overflow-y: scroll;
+		height:100%;
+		left:250px;
 		float: right;
+		position: absolute;
+		top:0;
+		bottom:0;
+		right:0;
 	}
 }
 
 @media (min-width: 700px) {
-	
-aside {right:70%;}
-	#main{width:70%;}
+	#items .btn {width: 31.333333%;}
+}
+
+@media (min-width: 850px) {
 	#items .btn {width: 23%;}
 }
 
-@media (min-width: 900px) {
-	aside{right:80%;}
-	#main{width:80%;}
+@media (min-width: 1000px) {
 	#items .btn {width: 18%;}
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1150px) {
 	#items .btn {width: 14.666%;}
 }
 
+@media (min-width: 1500px) {
+	#items .btn {width: 11.5%;margin:.5%;}
+	#items h2{padding: 1% .5% 0;}
+}
 
 /* Phonegap */
 * {

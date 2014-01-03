@@ -2,41 +2,76 @@
 
 	"items": [
 	{
-		"name": "Favorites",
+		"name": "",
 		"items": {
-			"Cola": 2.1,
-			"Pint": 2.1
+			"1 One": 1,
+			"5 Five": 5,
+			"10 Ten": 10,
+			"20 Twenty": 20,
+			"30 Thirty": 30
 		}
 	}
 	,
 	{
-		"name": "Frisdrank",
+		"name": "Stuff",
 		"items": {
-			"Cola": 2.1,
-			"Fruitsap": 2
+			"Brain Machine": 15,
+			"Mignonette Game": 20,
+			"LEDcube": 15,
+			"HELLO! My name is Badge": 15,
+			"Hackerspace Passport": 5,
+			"Atari Punk Console": 20,
+			"Bulbdial clock": 50,
+			"Geiger counter kit++": 70,
+			"Meggy Ji RGB": 55
 		}
 	}
 	,
 	{
-		"name": "Bieren",
+		"name": "Arduino",
 		"items": {
-			"Jupiler":2.1,
-			"Maes":2.1,
-			"Kriek":2.6,
-			"Brugse zot":3,
-			"Achel":3,
-			"Duvel":3.2,
-			"Leffe":2.5,
-			"Augustijn":2.1,
-			"Barbaar":2.1,
-			"Piraat":3.4,
-			"Stille Nacht":2.8,
-			"West-Malle tripel":3.2,
-			"West-Malle dubbel":4,
-			"Kasteelbier":2.7,
-			"Stella Artois":2.3,
-			"Hoegaarden":2.1,
-			"Tongerloo":3.1
+			"USB tiny ISP": 15,
+			"BoArduino": 15,
+			"Diavolino": 15,
+			"Drawdio": 15,
+			"MiniPOV": 15,
+			"Minty Boost": 15
+		}
+	}
+	,
+	{
+		"name": "TV B Gone",
+		"items": {
+			"Keychain": 15,
+			"Kit": 15,
+			"Pro": 20
+		}
+	}
+	,
+	{
+		"name": "Neuro Dreamer Sleep",
+		"items": {
+			"Sleep": 55,
+			"Lucid Dreaming": 55
+		}
+	}
+	,
+	{
+		"name": "LoL Shield ",
+		"items": {
+			"Kit Blue": 20,
+			"Kit White": 20,
+			"3 in 1 Starter kit": 45,
+			"FTDI Friend": 15
+		}
+	}
+	,
+	{
+		"name": "Trippy",
+		"items": {
+			"Trip Glasses": 5,
+			"1 RGB Waves": 10,
+			"2 RGB Waves": 15
 		}
 	}
 	]

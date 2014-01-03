@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Bitcoin Biller</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, height=device-height, target-densitydpi=device-dpi" />
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<link rel="icon" type="image/png" href="img/favicon.png" />
@@ -11,15 +11,88 @@
 	<link href="css/biller.css" rel="stylesheet">
 </head>
 <body ng-controller="CtrlMain">
-	<aside>
-		<div id="focus">
-			<a ng-href="#settle">&euro; {{tabs[focus].sum||0}}</a>
+	<aside ng-class="{qron:qron}">
+		<div id="qr" ng-click="getQr();qron=!qron">
+			<canvas id="qrcode"></canvas>
+		</div>
+		<div id="focus" ng-click="getQr()">
+			&euro; {{tabs[focus].sum||0}}<br>
+			<small>mBTC</small> {{mbtc() |number:2}}
+			<p ng-click="getRate()"><small>rate</small> {{rate * (1-pct/100)|number:1}}</p>
 		</div>
 		<div id="tabs">
 			<div ng-repeat="(i,t) in tabs" ng-click="toggle($index)" ng-class="{active:t.sum, focus:$index==focus}">
 				<span ng-show="t.sum">&euro; {{t.sum}}</span>
-				{{t.name}}
+				{{t.name}} <b ng-show="t.count">({{t.count}})</b>
 			</div>
+		</div>
+		<div id="txs">
+			<div ng-repeat="(i, tx) in txs">
+				<p ng-repeat="(j, o) in tx.out|filter:addr">
+					<b>{{o.value/100000}} mBTC</b>
+					{{tx.time*1000|date:'MMM d, HH:mm:ss'}}
+				</p>
+			</div>
+			<p>
+				<button ng-click="inet.check()" class="btn btn-lg btn-block btn-{{inet.ticking?'default':'success'}}">Check{{inet.ticking?'ing':''}} for payments</button>
+			</p>
+			<p >
+				<span ng-class="{'label label-danger':inet.error}">{{inet.msg}}</span>
+				<br>
+				{{inet.time|date:'MMM d, HH:mm:ss'}}
+			</p>
+			<p>
+				<button ng-click="settled(focus)" class="btn btn-lg btn-block btn-success">Settled</button>
+			</p>
+		</div>
+		<div class="settings" ng-hide="settings">
+			<p class="text-center">
+				<button ng-click="settings=true" class="btn btn-lg btn-block btn-default">Open settings</button>
+			</p>
+		</div>
+		<div class="settings" ng-show="settings">
+			<p>
+				<button ng-click="settings=false" class="btn btn-lg btn-block btn-warning">&times; Close settings</button>
+			</p>
+			<p>
+				<button ng-click="archive()" class="btn btn-lg btn-block btn-default">Hide old payments</button>
+			</p>
+			<p>
+				<button ng-click="showall()" class="btn btn-lg btn-block btn-default">Show all payments</button>
+			</p>
+			<p>
+				<button ng-click="getRate()" class="btn btn-lg btn-block btn-default">Update rate</button>
+			</p>
+			<p>
+				<label for="rate">
+					Rate
+				</label>
+				<input type="text" ng-model="rate" placeholder="Rate" class="form-control">
+			</p>
+			<p>
+				<label>
+					Percentage
+				</label>
+				<input type="text" ng-model="pct" placeholder="Percentage" class="form-control">
+			</p>
+			<p>
+				<label>
+					User <span class="label label-success">ober</span>
+				</label>
+				<input type="text" ng-model="user.name" placeholder="Username" class="form-control">
+			</p>
+			<p ng-show="user.name!=copy.name">
+				<button ng-click="settings=true" class="btn btn-lg btn-block btn-success">Login{{user.name?' as '+user.name:''}}</button>
+			</p>
+			<p>
+				<label>
+					Server <span class="label label-danger">not connected</span>
+				</label>
+				<input type="text" ng-model="server.ip" placeholder="Server" class="form-control">
+			</p>
+			<p ng-show="user.name!=copy.name">
+				<button ng-click="settings=true" class="btn btn-lg btn-block btn-success">Connect to server</button>
+			</p>
 		</div>
 	</aside>
 	<div id="main">
@@ -35,7 +108,7 @@
 		<hr />
 
 		<div id="settle">
-			<h2>Afrekenen</h2>
+			<h2>Settle</h2>
 			<h4>{{tabs[focus].name}}</h4>
 			<p ng-repeat="(key,item) in tabs[focus].items" class="nav">
 				<tt class="pull-left clearfix" style="width:100px">{{item.count}} &times; &euro; {{item.price}}</tt>
@@ -43,8 +116,8 @@
 			</p>
 			<h1>&euro; {{tabs[focus].sum||0}}</h1>
 			<p>
-				<label class="btn btn-lg btn-default">
-					<input type="checkbox"> Print a receipt
+				<label class="btn btn-lg btn-{{print?'success':'default'}}">
+					<input type="checkbox" ng-model="print"> Print a receipt
 				</label>
 			</p>
 			<p>
@@ -58,12 +131,13 @@
 				<br />
 				Payment method: <b>{{tabs[focus].method}}</b>
 			</p>
-			<p>
-				<button ng-click="settled(focus)" class="btn btn-success btn-lg">Afgerekend</button>
-			</p>
 		</div>
+		<p>
+			<button ng-click="settled(focus)" class="btn btn-lg btn-block btn-success">Settled</button>
+		</p>
 	</div>
 	<script src="js/angular.min.js"></script>
+	<script src="js/qr.min.js"></script>
 	<script src="js/app.js"></script>
 </body>
 </html>
